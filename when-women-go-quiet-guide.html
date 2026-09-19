@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>When Women Go Quiet: Interactive Guide</title>
+<style>
+:root{
+  --ink:#2A2140; --ink-soft:#5D5477; --paper:#F5F2FB; --line:#E2DCF0;
+  --p1:#5B5BD6; --p1t:#EAEAFB;
+  --p2:#0B7F73; --p2t:#DCF2EF;
+  --p3:#C22D75; --p3t:#FBE4EE;
+  --p4:#F2A007; --p4t:#FEF0CF;
+  --p5:#D2492C; --p5t:#FCE3DC;
+  --p6:#357F32; --p6t:#E1F0DE;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --pc:var(--ink); --pt:#ECE8F7; --pi:#fff;
+}
+.part-1{--pc:var(--p1);--pt:var(--p1t);--pi:#fff}
+.part-2{--pc:var(--p2);--pt:var(--p2t);--pi:#fff}
+.part-3{--pc:var(--p3);--pt:var(--p3t);--pi:#fff}
+.part-4{--pc:var(--p4);--pt:var(--p4t);--pi:var(--ink)}
+.part-5{--pc:var(--p5);--pt:var(--p5t);--pi:#fff}
+.part-6{--pc:var(--p6);--pt:var(--p6t);--pi:#fff}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 var(--sans)}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:600;line-height:1.18;margin:0}
+p{margin:0 0 .8em}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+[hidden]{display:none!important}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line)}
+.top-row{max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:10px 16px}
+.brand{font-family:var(--serif);font-weight:600;font-size:17px}
+.help-pill{background:var(--p5);color:#fff;border:0;border-radius:999px;padding:8px 14px;font-weight:600;font-size:14px;min-height:38px}
+.ribbon.slim{display:grid;grid-template-columns:repeat(6,1fr);height:6px}
+.ribbon.slim .band{position:relative}
+
+/* ribbon */
+.band .fill{position:absolute;inset:0;background:var(--pc);filter:grayscale(var(--g,1));opacity:calc(.5 + .5*(1 - var(--g,1)));transition:filter .6s,opacity .6s;border-radius:inherit}
+.ribbon.big{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;align-items:end;height:124px;margin:22px 0 14px}
+.ribbon.big .band{position:relative;border:0;padding:0;background:none;border-radius:999px;overflow:hidden;color:var(--pi)}
+.ribbon.big .band:nth-child(1){height:70px}
+.ribbon.big .band:nth-child(2){height:96px}
+.ribbon.big .band:nth-child(3){height:124px}
+.ribbon.big .band:nth-child(4){height:84px}
+.ribbon.big .band:nth-child(5){height:110px}
+.ribbon.big .band:nth-child(6){height:76px}
+.ribbon.big .lab{position:absolute;left:0;right:0;bottom:10px;text-align:center;font-family:var(--serif);font-weight:700;font-size:15px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+
+main{max-width:720px;margin:0 auto;padding:6px 16px 110px;outline:none}
+
+/* hero */
+.hero{background:#fff;border:1px solid var(--line);border-radius:28px;padding:26px 20px 22px;margin-top:14px}
+.hero .sub{color:var(--ink-soft);margin-bottom:8px;font-size:15px}
+.hero h1{font-size:clamp(2.3rem,11vw,3.6rem);letter-spacing:-.01em}
+.hero .lead{margin:12px 0 0;font-size:1.05rem;color:var(--ink-soft);max-width:34em}
+.prog-row{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.prog-row .txt{font-size:14px;color:var(--ink-soft);flex:1}
+.meter{height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--ink);border-radius:99px;transition:width .4s}
+
+/* buttons and chips */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:10px 18px;border-radius:14px;border:0;font-weight:600;text-decoration:none;text-align:center}
+.btn.primary{background:var(--ink);color:#fff}
+.btn.pc{background:var(--pc);color:var(--pi)}
+.btn.ghost{background:#fff;border:1.5px solid var(--line)}
+.btn.alert{background:var(--p5);color:#fff}
+.btn.small{min-height:40px;padding:8px 14px;font-size:14px}
+.row{display:flex;flex-wrap:wrap;gap:10px}
+.chip{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;font-size:14px;min-height:40px;text-align:left}
+.chip[aria-pressed="true"]{background:var(--pc);border-color:var(--pc);color:var(--pi)}
+.chip.sug{border-style:dashed;color:var(--ink-soft)}
+
+/* cards */
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;margin:14px 0}
+.card h2{font-size:1.35rem;margin-bottom:10px}
+.card h3{font-size:1.1rem;margin-bottom:6px}
+.big-q{font-family:var(--serif);font-size:1.45rem;line-height:1.25;margin:14px 0;padding-left:14px;border-left:6px solid var(--p3)}
+.callout{background:var(--pt);border-radius:14px;padding:12px 14px;margin:12px 0}
+.callout p{margin:4px 0 0}
+.alertbox{background:#FFF1EE;border:1.5px solid var(--p5);border-radius:16px;padding:14px 16px;margin:14px 0}
+.alertbox p:last-child{margin-bottom:0}
+.hint{color:var(--ink-soft);font-size:14px;margin:0 0 8px}
+.note{color:var(--ink-soft);font-size:15px}
+.page-h{font-size:2rem;margin:22px 0 6px}
+.page-sub{color:var(--ink-soft);margin-bottom:14px}
+
+/* check-in and flow */
+.moods{display:flex;flex-wrap:wrap;gap:8px}
+.reply{margin-top:12px}
+.flow{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.flow .chip{border-radius:14px}
+.flow .chip b{font-family:var(--serif);margin-right:6px}
+
+/* chapters */
+.part-head{background:var(--pc);color:var(--pi);border-radius:20px;padding:16px 18px;margin:28px 0 8px}
+.part-head h2{font-size:1.3rem}
+.part-head p{margin:4px 0 0;font-size:14px;opacity:.95}
+.chap{background:#fff;border:1px solid var(--line);border-left:7px solid var(--pc);border-radius:16px;margin:10px 0;overflow:hidden}
+.chap-head{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;padding:14px 14px;text-align:left}
+.num{flex:none;width:36px;height:36px;border-radius:50%;background:var(--pc);color:var(--pi);display:grid;place-items:center;font-family:var(--serif);font-weight:700}
+.ttl-wrap{flex:1;min-width:0}
+.ttl{display:block;font-family:var(--serif);font-weight:600;font-size:1.08rem;line-height:1.2}
+.bar{display:block;height:5px;background:var(--pt);border-radius:9px;margin-top:8px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--pc);transition:width .3s}
+.cnt{flex:none;font-size:13px;color:var(--ink-soft)}
+.chap-body{padding:0 16px 16px}
+.purpose{color:var(--ink-soft)}
+.checks{margin:8px 0}
+.check{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:11px 2px;min-height:44px}
+.box{flex:none;width:24px;height:24px;border-radius:8px;border:2px solid var(--pc);display:grid;place-items:center;margin-top:1px}
+.check[aria-checked="true"] .box{background:var(--pc)}
+.check[aria-checked="true"] .box::after{content:"";width:6px;height:11px;border:solid var(--pi);border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.check[aria-checked="true"] .lbl2{color:var(--ink-soft)}
+
+/* tools */
+.toolcard{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-left:7px solid var(--pc);border-radius:16px;padding:14px 16px;margin:10px 0}
+.toolcard h3{font-size:1.1rem}
+.toolcard .meta{font-size:13px;color:var(--ink-soft);margin:2px 0 4px}
+.toolcard .badge{display:inline-block;background:var(--pt);border-radius:99px;padding:2px 10px;font-size:12px;font-weight:600;margin-left:6px}
+.back{background:none;border:0;padding:12px 0;font-weight:600;min-height:44px}
+.tool h1{font-size:1.9rem;margin:2px 0 6px}
+.crumb{color:var(--ink-soft);font-size:14px;margin-bottom:6px}
+.field{display:block;margin:20px 0}
+.lbl{display:block;font-weight:600;margin-bottom:6px}
+.fh{font-size:1.15rem;margin:26px 0 0;padding-top:12px;border-top:2px solid var(--pt)}
+textarea,input[type=text],input[type=date]{width:100%;font:inherit;color:inherit;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:12px}
+textarea{resize:vertical;min-height:84px}
+textarea:focus,input:focus{border-color:var(--pc);outline:none;box-shadow:0 0 0 3px var(--pt)}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.tag{display:inline-flex;align-items:center;gap:6px;background:var(--pt);border-radius:999px;padding:6px 6px 6px 14px;font-size:14px}
+.tag .x{border:0;background:#fff;border-radius:50%;width:26px;height:26px;line-height:1;font-size:16px}
+.addrow{display:flex;gap:8px}
+.sugg{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+input[type=range]{width:100%;accent-color:var(--pc);height:32px}
+.scale-top{display:flex;justify-content:space-between;gap:10px;font-size:14px}
+.scale-top .val{color:var(--ink-soft);text-align:right}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.pairs{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.pair{display:grid;grid-template-columns:1fr 78px 78px;gap:6px;align-items:center;padding:8px 10px;border-bottom:1px solid var(--line)}
+.pair:last-child{border-bottom:0}
+.pair.hd{font-size:13px;color:var(--ink-soft);background:var(--pt)}
+.pair .chip{padding:6px 0;text-align:center;justify-content:center;min-height:38px}
+.summary{margin:22px 0}
+.sumbox{background:var(--pt);border-radius:16px;padding:14px 16px}
+.sumbox h3{font-size:1.05rem;margin-bottom:8px}
+.srow{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:center;font-size:14px;margin:4px 0}
+.srow .bar{margin:0;background:#fff}
+.stamp{width:100%}
+.tfoot{font-size:14px;color:var(--ink-soft);margin-top:30px;padding-top:14px;border-top:1px solid var(--line)}
+.tfoot button{background:none;border:0;padding:0;text-decoration:underline;font-size:14px}
+.preview{background:#fff;border:1.5px dashed var(--pc);border-radius:14px;padding:14px;min-height:64px;font-family:var(--serif);font-size:1.1rem;line-height:1.4;white-space:pre-wrap}
+.preview.empty{color:var(--ink-soft);font-family:var(--sans);font-size:15px}
+
+/* cycle tracker */
+.moodrow{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.mood{display:flex;flex-direction:column;align-items:center;gap:6px;border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:8px 2px;font-size:12px;min-height:60px}
+.mood i{display:block;width:22px;height:22px;border-radius:50%;background:var(--mc)}
+.mood[aria-pressed="true"]{border-color:var(--ink);box-shadow:0 0 0 2px var(--ink) inset}
+.grid{display:grid;grid-template-columns:repeat(13,1fr);grid-template-rows:repeat(7,1fr);grid-auto-flow:column;gap:4px}
+.cell{aspect-ratio:1;border:0;border-radius:6px;background:var(--line);padding:0;min-height:0}
+.cell.sel{outline:3px solid var(--ink);outline-offset:1px}
+.legend{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--ink-soft);margin-top:8px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:12px;height:12px;border-radius:4px;display:inline-block}
+
+/* 30 days */
+.week{border-left:7px solid var(--pc)}
+.days{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.day{width:42px;height:42px;border-radius:50%;border:2px solid var(--pc);background:#fff;font-weight:600;font-size:14px;display:grid;place-items:center;padding:0}
+.day[aria-pressed="true"]{background:var(--pc);color:var(--pi)}
+
+/* help */
+.steps{padding-left:22px;margin:8px 0}
+.steps li{margin:8px 0}
+ul.plain{padding-left:20px;margin:8px 0}
+ul.plain li{margin:6px 0}
+
+/* tabs */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:#fff;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.tabs-in{max-width:720px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
+.tab{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;padding:8px 2px 9px;font-size:11.5px;color:var(--ink-soft);min-height:56px}
+.tab svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tab[aria-current="page"]{color:var(--ink);font-weight:700}
+.tab[aria-current="page"] svg{stroke-width:2.4}
+.tab[aria-current="page"] .ic{background:var(--p1t);border-radius:99px;padding:3px 14px}
+.tab .ic{padding:3px 14px}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+@media (min-width:600px){.ribbon.big{height:150px}.ribbon.big .band:nth-child(n){height:auto}.ribbon.big .band:nth-child(1){height:90px}.ribbon.big .band:nth-child(2){height:120px}.ribbon.big .band:nth-child(3){height:150px}.ribbon.big .band:nth-child(4){height:104px}.ribbon.big .band:nth-child(5){height:136px}.ribbon.big .band:nth-child(6){height:96px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-row"><span class="brand">When Women Go Quiet</span><button class="help-pill" id="helpTop">Get help now</button></div>
+  <div class="ribbon slim" id="slimRibbon" aria-hidden="true"></div>
+</header>
+<main id="main" tabindex="-1">Loading…</main>
+<nav class="tabs" aria-label="Sections"><div class="tabs-in" id="tabs"></div></nav>
+
+<script>
+(function(){
+'use strict';
+
+/* ---------- helpers ---------- */
+const $=(s,r)=>(r||document).querySelector(s);
+function h(tag,attrs){
+  const el=document.createElement(tag);
+  if(attrs) for(const k in attrs){
+    const v=attrs[k];
+    if(v==null) continue;
+    if(k.startsWith('aria-')){el.setAttribute(k,String(v));continue;}
+    if(v===false) continue;
+    if(k==='class') el.className=v;
+    else if(k==='value'||k==='checked') el[k]=v;
+    else if(k.length>2&&k.startsWith('on')&&typeof v==='function') el.addEventListener(k.slice(2),v);
+    else el.setAttribute(k,v===true?'':v);
+  }
+  for(let i=2;i<arguments.length;i++){
+    [].concat(arguments[i]).flat(Infinity).forEach(c=>{
+      if(c==null||c===false) return;
+      el.append(c.nodeType?c:document.createTextNode(c));
+    });
+  }
+  return el;
+}
+const pad=n=>String(n).padStart(2,'0');
+const fmt=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+async function copyText(t){
+  try{await navigator.clipboard.writeText(t);return true;}
+  catch(e){try{const ta=h('textarea',{style:'position:fixed;opacity:0'});ta.value=t;document.body.append(ta);ta.select();const ok=document.execCommand('copy');ta.remove();return ok;}catch(e2){return false;}}
+}
+function hasVal(x){
+  if(x==null) return false;
+  if(Array.isArray(x)) return x.length>0;
+  if(typeof x==='string') return x.trim().length>0;
+  if(typeof x==='number') return x>0;
+  if(typeof x==='boolean') return x;
+  if(typeof x==='object') return Object.values(x).some(hasVal);
+  return false;
+}
+
+/* ---------- state and storage ---------- */
+const KEY='wwq-guide-v1';
+const fresh=()=>({read:{},tools:{},cyc:{},mvdToday:null,days:{},wk:{}});
+let S=fresh();
+async function load(){
+  try{
+    if(window.storage){
+      const r=await window.storage.get(KEY,false);
+      if(r&&r.value) S=Object.assign(fresh(),JSON.parse(r.value));
+    }
+  }catch(e){}
+}
+let saveT;
+function save(){
+  clearTimeout(saveT);
+  saveT=setTimeout(async()=>{try{if(window.storage) await window.storage.set(KEY,JSON.stringify(S),false);}catch(e){}},400);
+}
+
+/* ---------- content ---------- */
+const PARTS=[
+ {n:1,rom:'I',title:'Understanding the Problem',blurb:'What depression is, how it hides, and the pressures women carry.'},
+ {n:2,rom:'II',title:'Where Does It Come From?',blurb:'Causes, childhood patterns, and the life you thought you would have.'},
+ {n:3,rom:'III',title:'Women’s Life Stages and Depression',blurb:'Menstrual cycle, pregnancy and postpartum, perimenopause and menopause.'},
+ {n:4,rom:'IV',title:'Recognizing What Is Happening',blurb:'The signs, the masks, and what depression does to relationships.'},
+ {n:5,rom:'V',title:'Breaking the Cycle',blurb:'Admitting it, getting help, rebuilding daily life, and finding words.'},
+ {n:6,rom:'VI',title:'Staying Well',blurb:'Purpose, relapse prevention, safety, and not carrying it alone.'}
+];
+
+const CH=[
+{n:1,p:1,title:'What Is Depression?',purpose:'The clinical and human foundation.',idea:'Depression can involve low mood or loss of interest, along with changes in sleep, appetite, energy, concentration, self-worth, and hope.',tool:'changed',
+ s:['Depression Is More Than Sadness','The Emotional, Physical, Cognitive, and Behavioral Sides of Depression','When You Can Still Function While Struggling','Depression Versus Ordinary Sadness','Depression Versus Burnout, Stress, and Grief','Why Depression Is Not a Character Flaw','The Biology–Psychology–Environment Connection','Why There Is Rarely One Single Cause','How Depression Can Feed Itself','When You Should Seek Help']},
+{n:2,p:1,title:'Depression Doesn’t Always Look Like Depression',purpose:'Challenging the image of a depressed woman lying in bed crying.',idea:'Irritability, shopping, overeating, scrolling, or changes in sexual desire are clues that need context. They are not automatic proof of depression.',ideaLabel:'Important distinction',
+ s:['The Woman Who Says “I’m Fine”','When Exhaustion Becomes Normal','Irritability and Emotional Overload','The Disappearing Joy','Overthinking and Mental Exhaustion','Perfectionism as a Mask','The High-Functioning Woman','The Woman Who Takes Care of Everyone','Isolation Behind Social Activity','Food, Alcohol, Shopping, Scrolling, and Other Escapes','Changes in Sexual Desire','When Self-Care Disappears','When You Don’t Recognize Yourself','Looking at Patterns Instead of One Bad Day']},
+{n:3,p:1,title:'The Silent Pressure Women Carry',purpose:'How social expectations can interact with depression, without claiming that womanhood itself causes it.',idea:'Being responsible is not the problem. The problem starts when a woman’s worth depends on how much she can endure, provide, organize, rescue, or sacrifice.',
+ s:['The Expectation to Hold Everything Together','The Emotional Labor Nobody Sees','Being the Person Everyone Calls','The Pressure to Be Pleasant','When Saying No Feels Like Failure','Caregiving and Self-Neglect','The Pressure to Look Like You Have It Together','Career, Family, and the Double Shift','Financial Pressure','The Fear of Disappointing People','The Burden of Being Needed','When Responsibility Becomes Identity','Learning the Difference Between Care and Self-Abandonment']},
+{n:4,p:2,title:'Why Does Depression Happen?',purpose:'Explaining causes without oversimplifying them.',idea:'Biological, psychological, and environmental factors can interact. Hormones are not a universal explanation.',tool:'map',
+ s:['The Question: “Why Me?”','Vulnerability','Triggers','Maintaining Factors','Genetics and Biological Vulnerability','Physical Health and Chronic Illness','Sleep and Depression','Hormonal and Reproductive Factors','Psychological Patterns','Perfectionism and Self-Criticism','Chronic Stress','Relationships and Social Environment','Financial and Occupational Stress','Trauma and Adverse Experiences','Substance Use and Avoidance','Why Depression Can Appear to Come “Out of Nowhere”']},
+{n:5,p:2,title:'Childhood Wounds That Follow Women Into Adulthood',purpose:'How early lessons about needs, love, and worth can become adult patterns.',tool:'rules',
+ s:['What Childhood Teaches Us About Ourselves','Learning Whether Your Needs Matter','When Love Feels Conditional','The Good Girl Role','Learning to Keep Everyone Happy','Emotions That Were Dismissed','Criticism and Shame','Parentification and Excessive Responsibility','Neglect','Abuse and Trauma','Bullying and Social Rejection','Body Image and Early Messages About Appearance','Achievement and Worth','How Childhood Coping Strategies Become Adult Patterns','The Fear of Being a Burden','Breaking Old Rules Without Blaming Yourself or Your Family']},
+{n:6,p:2,title:'When Life Stops Going According to Plan',purpose:'Adult losses and disruptions. The focus is loss, identity, meaning, and adaptation, not assuming every woman experiences these events.',
+ s:['The Life You Thought You Would Have','Career Disappointment','Financial Instability','Divorce and Separation','Breakups and Betrayal','Infertility and Reproductive Loss','Pregnancy Loss','Illness and Disability','Becoming a Caregiver','Empty Nest and Changing Family Roles','Grief That Isn’t About Death','Comparison With Other Women’s Lives','The Shame of Feeling “Behind”','Rebuilding After a Major Disappointment']},
+{n:7,p:3,title:'Hormones, Menstruation, and Mood',purpose:'Careful, honest information about the cycle and mood.',idea:'Hormonal changes can matter for some women, but “it’s just hormones” is not an adequate explanation for serious depression.',tool:'cycle',
+ s:['The “It’s Just Your Hormones” Problem','Understanding the Menstrual Cycle and Mood','When Mood Changes Follow a Pattern','PMS Versus PMDD','Depression That Is Not Limited to the Cycle','Tracking Symptoms','Physical Symptoms and Emotional Symptoms','When Period-Related Symptoms Disrupt Daily Life','Seeking Proper Assessment','Treatment and Support','Why Self-Blame Does Not Help']},
+{n:8,p:3,title:'Pregnancy, Postpartum Depression, and the Myth of the “Perfect Mother”',purpose:'A chapter of its own, not buried inside general depression.',idea:'Perinatal depression can occur during pregnancy or after birth and is more serious than the temporary “baby blues.”',tool:'perinatal',
+ s:['Pregnancy Does Not Automatically Protect Mental Health','When Pregnancy Feels Nothing Like You Expected','The Baby Blues and Depression','What Postpartum Depression Can Look Like','Anxiety, Guilt, and Fear','When You Feel Disconnected From Your Baby','The Pressure to Feel Grateful','Sleep Deprivation and Emotional Health','Birth Trauma','Breastfeeding Pressure','Changes in Identity','Relationship Changes After Birth','Asking for Help Without Feeling Like a Bad Mother','Professional Assessment and Treatment','When Symptoms Become an Emergency']},
+{n:9,p:3,title:'Perimenopause, Menopause, and the Woman You Are Becoming',purpose:'Body, mood, identity, and family roles in midlife.',idea:'Perimenopausal depression can occur during the menopause transition and may involve intense irritability, anxiety, sadness, or loss of enjoyment.',tool:'meno',
+ s:['When Your Body Starts Changing','Perimenopause Is Not Just About Hot Flashes','Sleep and Mood','Irritability and Emotional Changes','Loss of Enjoyment','Body Changes','Sexual Changes','Changing Family Roles','Aging and Identity','The Empty-Nest Experience','Career and Midlife Questions','When Hormonal Changes and Depression Overlap','Why Proper Assessment Matters','Rebuilding Identity in a New Life Stage']},
+{n:10,p:4,title:'The Signs You Shouldn’t Ignore',purpose:'Recognition, not self-diagnosis.',tool:'beforenow',
+ s:['Persistent low mood','Loss of interest','Constant exhaustion','Sleep changes','Appetite and weight changes','Concentration problems','Anxiety and agitation','Irritability','Withdrawal','Emotional numbness','Guilt','Worthlessness','Hopelessness','Loss of sexual interest','Neglecting personal care','Increased substance use','Feeling like a burden','Thoughts about death or suicide']},
+{n:11,p:4,title:'The Masks Women Wear',purpose:'Each mask is a way of coping that can also keep other people from seeing you.',idea:'What happens when the identity that protects you also prevents people from seeing that you need help?',ideaLabel:'The question',tool:'masks',
+ s:['The Strong Woman','The Good Woman','The Successful Woman','The Perfect Mother','The Caregiver','The People-Pleaser','The Independent Woman','The Funny Friend','The Busy Woman','The Beautiful Woman','The Spiritual/Positive Woman','The Woman Who Has Everyone Else’s Answers','The “I Don’t Need Anyone” Woman']},
+{n:12,p:4,title:'Depression and Relationships',purpose:'How depression changes closeness, and how connection can be rebuilt.',
+ s:['When You Stop Reaching Out','When Your Partner Thinks You No Longer Care','Depression and Romantic Intimacy','Sex and Emotional Connection','Friendship During Depression','Family Expectations','Parenting While Depressed','When Everyone Needs Something From You','Setting Boundaries','When Loved Ones Become Frustrated','Depression Does Not Excuse Harmful Behavior','Rebuilding Trust After Withdrawal','When a Relationship Is Unsafe','Building a Wider Support Network']},
+{n:13,p:5,title:'The First Step Is Admitting Something Is Wrong',purpose:'Moving from “I should be able to handle this” to taking yourself seriously.',idea:'What if admitting that you are struggling is not weakness, but the beginning of taking yourself seriously?',ideaLabel:'The question',tool:'admission',
+ s:['“I Should Be Able to Handle This”','Denial','Minimizing','Comparing Yourself With Other Women','Waiting for Things to Get Worse','Choosing One Person','Saying It Out Loud','Asking for an Appointment','Accepting That You Need Support','What Acceptance Is—and Isn’t']},
+{n:14,p:5,title:'Getting Professional Help',purpose:'What help looks like and how to get it.',idea:'Treatment is individualized. Psychotherapy, medication, or a combination may be used, and treatment may need adjusting along the way.',tool:'provider',
+ s:['Who Can Help?','What Happens During an Assessment?','What to Tell Your Doctor or Therapist','Psychotherapy','CBT and Behavioral Approaches','Medication','When Medication and Therapy Are Combined','Treatment During Pregnancy and Postpartum','Treatment During Reproductive Transitions','Finding the Right Professional','What If the First Treatment Doesn’t Work?','Treatment and Personal Choice','Questions to Ask Your Provider','When Professional Help Needs to Become Urgent']},
+{n:15,p:5,title:'Rebuilding Your Daily Life',purpose:'Starting small, and building a day you can actually live.',idea:'The Minimum Viable Day: a realistic baseline for difficult days.',ideaLabel:'Practical tool',tool:'mvd',
+ s:['Start Smaller','Getting Out of Bed','Sleep','Food and Hydration','Movement','Personal Hygiene','Your Physical Environment','Work and Productivity','Parenting Responsibilities','Reintroducing Pleasure','Reintroducing Meaning','Reconnecting With People','Reducing Avoidance','Creating a Minimum Day','Building a Better Day','Tracking Progress Without Turning Recovery Into Another Performance']},
+{n:16,p:5,title:'Learning to Talk About What You Feel',purpose:'Written around how women often communicate, and why “I’m not okay” is so hard to say.',idea:'The Three-Sentence Conversation: what is happening, how it is affecting me, and what I need.',ideaLabel:'Tool',tool:'three',
+ s:['Why Saying “I’m Not Okay” Is Difficult','“I’m Tired” When You Mean Something More','Naming Emotions','Separating Feelings From Self-Judgment','Asking for Specific Help','Talking to a Partner','Talking to Friends','Talking to Family','Talking to Children','Talking to a Doctor','Talking About Suicidal Thoughts','Boundaries Around Disclosure','When Someone Doesn’t Understand','Vulnerability Without Losing Yourself']},
+{n:17,p:6,title:'Rebuilding Purpose',purpose:'The identity question behind recovery.',idea:'Who am I when I am no longer living only for everyone else?',ideaLabel:'The question',tool:'values',
+ s:['Depression and the Loss of Future','Achievement Versus Meaning','Motherhood and Identity','Career and Identity','Partnership and Identity','Caring for Others Without Losing Yourself','Values','Creativity','Contribution','Friendship','Spirituality and Meaning — Without Assuming Religion','Rediscovering Curiosity','Building a Future Slowly','Choosing What Matters Now']},
+{n:18,p:6,title:'Depression, Recovery, and Relapse',purpose:'Recovery is not a straight line. This chapter is about noticing early and starting again without shame.',tool:'relapse',
+ s:['Recovery Is Not a Straight Line','A Bad Day Is Not Automatically Relapse','Knowing Your Baseline','Recognizing Early Warning Signs','Sleep Changes','Withdrawal','Loss of Interest','Returning Irritability','Increased Avoidance','Reaching Out Early','Maintaining Treatment','Reviewing What Worked','Stress and Accumulation','Building a Relapse-Prevention Plan','Starting Again Without Shame']},
+{n:19,p:6,title:'When You Feel Like You Can’t Go On',purpose:'The safety chapter: direct, calm, and action-oriented.',idea:'Suicidal thoughts deserve serious attention whether or not a person looks outwardly successful.',tool:'safety',crisis:true,
+ s:['When Pain Becomes Bigger Than Your Ability to Cope','Passive Thoughts About Death','Active Suicidal Thoughts','When You Have a Plan or Feel You May Act','Do Not Stay Alone During Immediate Danger','Tell Someone Directly','Move Away From Means of Harm','Avoid Alcohol and Recreational Drugs During a Crisis','Go Somewhere Safe','Emergency Medical Help','Helping Another Woman in Crisis','What Happens After the Crisis','Building a Safety Plan Before You Need It','Your Current Pain Is Not Your Entire Future']},
+{n:20,p:6,title:'You Don’t Have to Carry It Alone',purpose:'Back to connection, self-respect, support, and continued life.',idea:'You do not have to become the woman you were before depression. Recovery can also mean becoming someone who understands herself more honestly, knows when to ask for help, protects her boundaries, accepts support, and builds a life that does not require her to disappear inside it.',ideaLabel:'Final message',tool:'network',
+ s:['You Were Never Supposed to Do Everything Alone','Receiving Help','Healthy Interdependence','Choosing Safe People','Building a Support Network','Knowing What Each Person Can Offer','Professional Support as Part of Your Network','Supporting Others Without Losing Yourself','Boundaries Are Part of Recovery','Asking for Help Earlier','You Are More Than What You Produce','You Are More Than What Happened to You','You Are Allowed to Change','You Are Allowed to Begin Again']}
+];
+
+const SCALE=['Same as usual','A little different','Noticeably different','Very different','Extremely different'];
+const SIGNS=CH[9].s;
+
+const TOOLS=[
+{id:'changed',ch:1,ws:2,title:'What Has Changed?',blurb:'Compare how you are now with how you usually are.',
+ fields:[
+  {t:'note',text:'For each area, slide toward “very different” if it has changed from your normal baseline. Leave it at “same as usual” if it hasn’t.'},
+  {t:'h',text:'Emotional'},
+  {t:'scale',id:'mood',label:'My mood'},{t:'scale',id:'joy',label:'Enjoyment and interest'},{t:'scale',id:'hope',label:'Hope about the future'},{t:'scale',id:'worth',label:'How I feel about myself'},
+  {t:'h',text:'Physical'},
+  {t:'scale',id:'energy',label:'Energy'},{t:'scale',id:'sleep',label:'Sleep'},{t:'scale',id:'appetite',label:'Appetite'},
+  {t:'h',text:'Social'},
+  {t:'scale',id:'reach',label:'Reaching out to people'},{t:'scale',id:'company',label:'Enjoying time with people'},
+  {t:'h',text:'Behavioral'},
+  {t:'scale',id:'focus',label:'Concentration and decisions'},{t:'scale',id:'start',label:'Getting started on tasks'},{t:'scale',id:'care',label:'Looking after myself'},
+  {t:'pick',id:'dur',multi:false,label:'How long has this been going on?',options:['Less than two weeks','Two weeks or more','Several months or longer']}
+ ],
+ summary(v,T){
+  const sc=T.fields.filter(f=>f.t==='scale');
+  const rows=sc.filter(f=>(v[f.id]||0)>0);
+  const n=sc.filter(f=>(v[f.id]||0)>=2).length;
+  if(!rows.length) return null;
+  let msg;
+  if(n>=4&&v.dur&&v.dur!=='Less than two weeks') msg='Several areas have changed, and it has lasted a while. That is worth bringing to a doctor or therapist. This is information, not a diagnosis.';
+  else if(n>=1) msg='Some things have shifted. Keep noticing, and repeat this in a week to see whether it is a pattern or a rough patch.';
+  else msg='Nothing has changed much. Check again if that shifts.';
+  return h('div',{class:'sumbox'},h('h3',null,'Your picture so far'),
+    rows.map(f=>h('div',{class:'srow'},h('span',null,f.label),h('span',{class:'bar'},h('i',{style:'width:'+((v[f.id]||0)*25)+'%'})))),
+    h('p',{style:'margin:10px 0 0'},msg));
+ }},
+{id:'map',ch:4,ws:1,title:'My Depression Map',blurb:'Sort what you’re carrying into vulnerabilities, triggers, what keeps it going, and what protects you.',
+ fields:[
+  {t:'list',id:'vuln',label:'Vulnerabilities',hint:'Things that may make me more susceptible.',suggest:['Family history','Chronic illness','Perfectionism','Harsh self-criticism','Difficult childhood experiences']},
+  {t:'list',id:'trig',label:'Triggers',hint:'Events or changes that tipped things.',suggest:['Job loss','Breakup or divorce','A loss','Having a baby','Moving','Caring for someone who is ill']},
+  {t:'list',id:'maint',label:'Maintaining factors',hint:'What keeps it going.',suggest:['Poor sleep','Pulling away from people','Avoiding things','Harsh self-talk','Alcohol','Doing everything alone']},
+  {t:'list',id:'prot',label:'Protective factors',hint:'What supports me.',suggest:['A friend I trust','A steady routine','Time outdoors','Treatment or therapy','Work I find meaningful']},
+  {t:'list',id:'infl',label:'Things I can influence',hint:'Small levers, not everything at once.'}
+ ],
+ summary(v){
+  if(!(v.maint&&v.maint.length)) return null;
+  return h('div',{class:'sumbox'},h('h3',null,'One step'),h('p',{style:'margin:0'},'Look at your maintaining factors. Which one could you change a little this week? Pick one, and put it under “Things I can influence.”'));
+ }},
+{id:'rules',ch:5,title:'The Rules I Learned Growing Up',blurb:'Finish the sentences. Notice which old rules still run the show.',
+ fields:[
+  {t:'note',text:'Answer quickly and honestly. This is not about blaming anyone. It is about seeing the rule.'},
+  {t:'text',id:'r1',label:'I learned that a good woman should…'},
+  {t:'text',id:'r2',label:'I learned that anger was…'},
+  {t:'text',id:'r3',label:'I learned that asking for help was…'},
+  {t:'text',id:'r4',label:'I learned that my body was…'},
+  {t:'text',id:'r5',label:'I learned that mistakes meant…'},
+  {t:'text',id:'r6',label:'I learned that love had to be earned by…'},
+  {t:'text',id:'r7',label:'Which of these rules still controls me?',rows:4}
+ ]},
+{id:'cycle',ch:7,ws:4,title:'Three-Month Mood and Cycle Tracker',blurb:'Log your mood for 13 weeks and see whether patterns follow your cycle.',
+ fields:[
+  {t:'note',text:'Add a quick entry each day, or whenever you can. Tap any square to add or edit that day.'},
+  {t:'cycle'}
+ ]},
+{id:'perinatal',ch:8,ws:5,title:'My Pregnancy and Postpartum Support Plan',blurb:'Line up help and words before you need them, or while you’re in the thick of it.',
+ fields:[
+  {t:'alert',text:'Thoughts of harming yourself or your baby, hearing or seeing things others don’t, or feeling confused or cut off from reality need urgent help. Call your local emergency number now.'},
+  {t:'pick',id:'help',label:'Kinds of help I could ask for',options:['Meals or groceries','Housework','Night feeds or sleep protection','Someone to hold the baby while I shower','Rides to appointments','A listening ear','Childcare for older children']},
+  {t:'text',id:'who',label:'People who could help with practical things'},
+  {t:'text',id:'sleep',label:'My plan for protecting sleep'},
+  {t:'text',id:'watch',label:'Signs I’d like others to watch for'},
+  {t:'text',id:'tell',label:'Who I will tell first if I start to feel worse'},
+  {t:'text',id:'prov',label:'My doctor, midwife, or therapist, and how to reach them'},
+  {t:'text',id:'hear',label:'What I need to hear on hard days',ph:'Example: I am not a bad mother for needing help.'}
+ ]},
+{id:'meno',ch:9,ws:6,title:'My Perimenopause and Menopause Plan',blurb:'Track what’s changing and what to ask, so assessment is easier.',
+ fields:[
+  {t:'pick',id:'chg',label:'Changes I’ve noticed',options:['Sleep problems','Hot flashes or night sweats','Irritability','Low mood','Anxiety','Loss of enjoyment','Body changes','Sexual changes','Changes in my periods']},
+  {t:'text',id:'how',label:'How these changes affect my days'},
+  {t:'text',id:'role',label:'What’s shifting in my roles, family, or work'},
+  {t:'text',id:'ask',label:'What I want to ask my doctor'},
+  {t:'text',id:'keep',label:'What I want to keep, and what I’m ready to let go of'}
+ ]},
+{id:'beforenow',ch:10,title:'My Before-and-Now Comparison',blurb:'For each sign, mark whether it was true before, is true now, or both.',
+ fields:[
+  {t:'note',text:'This is recognition, not diagnosis. Mark what is honestly true, and leave the rest blank.'},
+  {t:'pairs',id:'signs',items:SIGNS,cols:['Before','Now']}
+ ],
+ summary(v){
+  const d=v.signs||{};
+  const nw=SIGNS.filter(s=>d[s]&&d[s].n&&!d[s].b);
+  const any=SIGNS.some(s=>d[s]&&(d[s].n||d[s].b));
+  const crisis=d[SIGNS[17]]&&d[SIGNS[17]].n;
+  if(!any) return null;
+  const box=h('div',{class:'sumbox'},h('h3',null,'What stands out'),
+    h('p',{style:'margin:0'},nw.length===0?'Nothing is new compared with before. Notice whether that matches how you feel.':nw.length+' sign'+(nw.length===1?' is':'s are')+' here now that weren’t before.'+(nw.length>=3?' That is worth talking through with a doctor or therapist.':'')));
+  if(crisis){return h('div',null,box,h('div',{class:'alertbox'},h('p',null,h('strong',null,'You marked thoughts about death or suicide.')),h('p',null,'That deserves attention today, however you look from the outside. Please reach out to someone now.'),h('button',{class:'btn alert',onclick:()=>go('help')},'Open help now')));}
+  return box;
+ }},
+{id:'masks',ch:11,title:'Which Masks Do I Wear?',blurb:'Name the roles that protect you, and what they cost.',
+ fields:[
+  {t:'pick',id:'m',label:'Masks I recognize in myself',options:CH[10].s},
+  {t:'text',id:'most',label:'The mask I wear most'},
+  {t:'text',id:'protect',label:'What it protects me from'},
+  {t:'text',id:'cost',label:'What it costs me'},
+  {t:'text',id:'see',label:'One person who could see behind it'}
+ ]},
+{id:'admission',ch:13,title:'The Admission',blurb:'Put the truth on the page before you say it to anyone.',
+ fields:[
+  {t:'text',id:'story',label:'The story I’ve been telling myself is…'},
+  {t:'text',id:'true',label:'What is actually true right now is…'},
+  {t:'text',id:'person',label:'The one person I could tell first is…',rows:2},
+  {t:'text',id:'words',label:'The words I could use are…'},
+  {t:'text',id:'appt',label:'The appointment I will ask for is…',rows:2},
+  {t:'stamp',id:'done',label:'I’m taking myself seriously'}
+ ]},
+{id:'provider',ch:14,title:'Appointment Prep',blurb:'Bring your notes and questions to a doctor or therapist.',
+ fields:[
+  {t:'text',id:'noticed',label:'What I’ve noticed',rows:4},
+  {t:'text',id:'since',label:'How long it has been going on',rows:2},
+  {t:'text',id:'affects',label:'How it affects work, home, relationships, sleep'},
+  {t:'text',id:'hx',label:'Health conditions, medications, or family history to mention'},
+  {t:'pick',id:'q',label:'Questions I want to ask',options:['What do you think is going on?','What treatment options are there for me?','What are the possible side effects?','How long before I might notice a difference?','What if the first treatment doesn’t work?','Are any options affected by pregnancy, breastfeeding, or my other health conditions?','How will we check my progress?']},
+  {t:'list',id:'myq',label:'My own questions'}
+ ]},
+{id:'mvd',ch:15,title:'The Minimum Viable Day',blurb:'A realistic floor for difficult days.',
+ fields:[{t:'mvd'}]},
+{id:'three',ch:16,title:'The Three-Sentence Conversation',blurb:'Three sentences: what is happening, how it affects you, and what you need.',
+ fields:[{t:'three'}]},
+{id:'values',ch:17,title:'What Matters Now',blurb:'Choose the values you want your life to bend toward.',
+ fields:[
+  {t:'pick',id:'v',label:'Values that feel true for me right now',options:['Connection','Creativity','Rest','Honesty','Growth','Family','Health','Faith or meaning','Learning','Adventure','Service','Independence','Play','Stability']},
+  {t:'text',id:'more',label:'If I weren’t living only for everyone else, I’d want more…'},
+  {t:'text',id:'less',label:'and less…',rows:2},
+  {t:'text',id:'step',label:'One small step toward this week',rows:2}
+ ]},
+{id:'baseline',ch:18,ws:3,title:'My Emotional Baseline',blurb:'What “normal” looks like for you, so changes are easier to spot.',
+ fields:[
+  {t:'text',id:'sleep',label:'My usual sleep and energy'},
+  {t:'text',id:'joy',label:'What enjoyment normally looks like for me'},
+  {t:'text',id:'people',label:'How I usually spend time with people'},
+  {t:'text',id:'stress',label:'How I usually act when stressed'},
+  {t:'text',id:'week',label:'What a good week looks like'}
+ ]},
+{id:'relapse',ch:18,title:'My Relapse-Prevention Plan',blurb:'Spot early signs and decide in advance what you’ll do.',
+ fields:[
+  {t:'pick',id:'signs',label:'My early warning signs',options:['Sleep changes','Pulling away','Losing interest','Returning irritability','More avoidance','Skipping meals','Missing appointments','Dropping self-care']},
+  {t:'list',id:'mine',label:'Other signs that are mine'},
+  {t:'list',id:'first',label:'My first three actions',hint:'Small and specific.'},
+  {t:'text',id:'tell',label:'Who I will tell early',rows:2},
+  {t:'list',id:'worked',label:'What helped before'},
+  {t:'text',id:'contact',label:'If several signs last more than a week, I will contact…',rows:2}
+ ]},
+{id:'safety',ch:19,title:'My Safety Plan',blurb:'Build it now, while you’re steady, so it’s there when you’re not.',
+ fields:[
+  {t:'alert',text:'If you are in immediate danger, call your local emergency number now. In the US you can also call or text 988.'},
+  {t:'list',id:'warn',label:'My warning signs',hint:'Thoughts, moods, or situations that tell me I’m heading toward a crisis.'},
+  {t:'list',id:'self',label:'Things I can do on my own to cope',suggest:['Take a shower','Walk outside','Listen to a specific playlist','Hold something cold']},
+  {t:'list',id:'places',label:'People and places that help me feel less alone'},
+  {t:'list',id:'ask',label:'People I can ask for help',hint:'Names and numbers.'},
+  {t:'list',id:'pro',label:'Professionals and crisis lines',suggest:['988 Suicide & Crisis Lifeline (US): call or text 988','My local emergency number']},
+  {t:'text',id:'safe',label:'Making my space safer',hint:'Who could hold or remove anything I could use to hurt myself?'},
+  {t:'text',id:'reasons',label:'My reasons to keep going'}
+ ]},
+{id:'network',ch:20,title:'My Support Network',blurb:'Who can offer what, and where you need a boundary.',
+ fields:[
+  {t:'text',id:'night',label:'Someone I can call at night',rows:2},
+  {t:'text',id:'listen',label:'Someone who listens without fixing',rows:2},
+  {t:'text',id:'practical',label:'Someone practical who helps with tasks',rows:2},
+  {t:'text',id:'laugh',label:'Someone who makes life lighter',rows:2},
+  {t:'text',id:'prof',label:'The professional on my team',rows:2},
+  {t:'text',id:'bound',label:'Where I need a boundary, so I can keep helping without losing myself'}
+ ]}
+];
+
+const WEEKS=[
+ {n:1,part:1,title:'Notice',days:[1,7],tasks:['Mood','Energy','Sleep','Appetite','Withdrawal','Thoughts and behavior'],tools:['changed','baseline'],line:'You’re collecting information, not judging it. Pick a regular time each day to check in.'},
+ {n:2,part:2,title:'Stabilize',days:[8,14],tasks:['A steady sleep routine','Regular meals','Basic hygiene','Some movement','Appointments','Medication as prescribed, if this applies to me'],tools:['mvd','provider'],line:'Go for steady, not perfect. The Minimum Viable Day is your floor.'},
+ {n:3,part:3,title:'Reconnect',days:[15,21],tasks:['Friends','Family','My partner','My children','My community','Something I enjoy'],tools:['three','network'],line:'Small contact counts. One message, one call, one shared meal.'},
+ {n:4,part:6,title:'Rebuild',days:[22,30],tasks:['Values','Boundaries','Purpose','My treatment plan','My relapse-prevention plan'],tools:['values','relapse'],line:'Turn what you’ve learned into a plan you can keep using.'}
+];
+
+const FLOW=[
+ {k:'Problem',txt:'What depression is, and how it can hide behind a busy, capable life.',ch:[1,2,3]},
+ {k:'Contributing factors',txt:'The vulnerabilities you carry: biology, temperament, childhood, health, and life stage.',ch:[4,5,6,7,8,9]},
+ {k:'Triggers',txt:'The events and changes that tip things over: losses, transitions, and stress that piles up.',ch:[4,6,8]},
+ {k:'Maintaining factors',txt:'What keeps it going once it starts: poor sleep, withdrawal, avoidance, self-criticism, and the masks.',ch:[4,11]},
+ {k:'Consequences',txt:'What depression does to your body, your relationships, your work, and your sense of self.',ch:[10,12]},
+ {k:'Recovery',txt:'Naming it, getting help, rebuilding daily life, and building a life that can hold you.',ch:[13,14,15,16,17,18,19,20]}
+];
+
+const MOODS=[
+ {l:'Okay',msg:'Good to hear. Read at your own pace, or try a tool that helps you notice patterns early.',a:['Open the tools',()=>go('tools')]},
+ {l:'Tired',msg:'Tiredness that becomes normal can be a clue, not a character flaw. Chapter 2 looks at exactly that.',a:['Read Chapter 2',()=>go('chapters',null,2)]},
+ {l:'Flat or numb',msg:'Losing enjoyment is worth noticing. This exercise compares today with your usual self.',a:['Try “What Has Changed?”',()=>go('tools','changed')]},
+ {l:'Overwhelmed',msg:'When everything needs you at once, start smaller. A minimum day gives you a floor to stand on.',a:['Build a minimum day',()=>go('tools','mvd')]},
+ {l:'Really low',msg:'Thank you for being honest. You deserve support, and you don’t have to wait until it gets worse. If you might act on thoughts of suicide, use Help now. Otherwise, consider telling one person today.',a:['Open help',()=>go('help')],crisis:true}
+];
+
+/* ---------- progress ---------- */
+const chDone=c=>c.s.reduce((a,_,i)=>a+(S.read[c.n+'-'+i]?1:0),0);
+const chProg=c=>chDone(c)/c.s.length;
+const partProg=p=>{const cs=CH.filter(c=>c.p===p);return cs.reduce((a,c)=>a+chProg(c),0)/cs.length;};
+const totalProg=()=>{const t=CH.reduce((a,c)=>a+c.s.length,0);return CH.reduce((a,c)=>a+chDone(c),0)/t;};
+function updateRibbons(){
+  PARTS.forEach(p=>{
+    const g=1-Math.sqrt(Math.min(1,partProg(p.n)));
+    document.querySelectorAll('.band[data-part="'+p.n+'"]').forEach(b=>b.style.setProperty('--g',g.toFixed(2)));
+  });
+  const pc=Math.round(totalProg()*100);
+  document.querySelectorAll('.js-overall').forEach(e=>{e.textContent=pc+'% explored. Color returns as you read and reflect.';});
+  document.querySelectorAll('.js-overall-bar').forEach(e=>{e.style.width=pc+'%';});
+}
+
+/* ---------- routing ---------- */
+const view={tab:'guide',tool:null,chapter:null};
+function go(tab,tool,chapter){
+  view.tab=tab;view.tool=tool||null;view.chapter=chapter||null;
+  render();
+  if(chapter){const el=document.getElementById('ch'+chapter);if(el) el.scrollIntoView({block:'start'});}
+  else window.scrollTo(0,0);
+}
+
+/* ---------- field renderers ---------- */
+function fText(f,v,changed){
+  const ta=h('textarea',{rows:String(f.rows||3),placeholder:f.ph||''});
+  ta.value=v[f.id]||'';
+  ta.addEventListener('input',()=>{v[f.id]=ta.value;changed();});
+  return h('label',{class:'field'},h('span',{class:'lbl'},f.label),f.hint&&h('span',{class:'hint',style:'display:block'},f.hint),ta);
+}
+function fList(f,v,changed){
+  const items=v[f.id]=v[f.id]||[];
+  const root=h('div',{class:'field'});
+  function draw(focus){
+    root.replaceChildren(h('span',{class:'lbl'},f.label),f.hint&&h('p',{class:'hint'},f.hint));
+    root.append(h('div',{class:'tags'},items.map((t,i)=>h('span',{class:'tag'},t,h('button',{class:'x','aria-label':'Remove '+t,onclick:()=>{items.splice(i,1);changed();draw(true);}},'×')))));
+    const inp=h('input',{type:'text',placeholder:'Add one…',maxlength:'140','aria-label':'Add to '+f.label});
+    const add=()=>{const t=inp.value.trim();if(!t) return;items.push(t);changed();draw(true);};
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();add();}});
+    root.append(h('div',{class:'addrow'},inp,h('button',{class:'btn small pc',onclick:add},'Add')));
+    if(f.suggest){
+      const left=f.suggest.filter(s=>!items.includes(s));
+      if(left.length) root.append(h('div',{class:'sugg'},left.map(s=>h('button',{class:'chip sug',onclick:()=>{items.push(s);changed();draw(false);}},'+ '+s))));
+    }
+    if(focus) inp.focus();
+  }
+  draw(false);
+  return root;
+}
+function fPick(f,v,changed){
+  const multi=f.multi!==false;
+  if(multi&&!Array.isArray(v[f.id])) v[f.id]=[];
+  const on=o=>multi?v[f.id].includes(o):v[f.id]===o;
+  const btns=f.options.map(o=>h('button',{class:'chip','aria-pressed':on(o),onclick:()=>{
+    if(multi){const i=v[f.id].indexOf(o);if(i>-1) v[f.id].splice(i,1);else v[f.id].push(o);}
+    else v[f.id]=v[f.id]===o?'':o;
+    sync();changed();
+  }},o));
+  const sync=()=>btns.forEach((b,i)=>b.setAttribute('aria-pressed',String(on(f.options[i]))));
+  return h('div',{class:'field'},h('span',{class:'lbl'},f.label),h('div',{class:'chips'},btns));
+}
+function fScale(f,v,changed){
+  const val=v[f.id]||0;
+  const out=h('span',{class:'val'},SCALE[val]);
+  const inp=h('input',{type:'range',min:'0',max:'4',step:'1',value:String(val),'aria-label':f.label});
+  inp.addEventListener('input',()=>{v[f.id]=+inp.value;out.textContent=SCALE[+inp.value];changed();});
+  return h('div',{class:'field',style:'margin:14px 0'},h('div',{class:'scale-top'},h('span',null,f.label),out),inp);
+}
+function fPairs(f,v,changed){
+  const d=v[f.id]=v[f.id]||{};
+  const box=h('div',{class:'pairs field'});
+  box.append(h('div',{class:'pair hd'},h('span',null,'Sign'),f.cols.map(c=>h('span',{style:'text-align:center'},c))));
+  f.items.forEach(it=>{
+    const e=d[it]=d[it]||{};
+    const b1=h('button',{class:'chip','aria-pressed':!!e.b,'aria-label':it+', '+f.cols[0]}, e.b?'✓':'');
+    const b2=h('button',{class:'chip','aria-pressed':!!e.n,'aria-label':it+', '+f.cols[1]}, e.n?'✓':'');
+    b1.addEventListener('click',()=>{e.b=!e.b;b1.setAttribute('aria-pressed',String(!!e.b));b1.textContent=e.b?'✓':'';changed();});
+    b2.addEventListener('click',()=>{e.n=!e.n;b2.setAttribute('aria-pressed',String(!!e.n));b2.textContent=e.n?'✓':'';changed();});
+    box.append(h('div',{class:'pair'},h('span',null,it),b1,b2));
+  });
+  return box;
+}
+function fStamp(f,v,changed){
+  const btn=h('button',{class:'btn pc stamp'});
+  const upd=()=>{btn.textContent=v[f.id]?'✓ '+f.label+' (marked '+v[f.id]+')':f.label;btn.setAttribute('aria-pressed',String(!!v[f.id]));};
+  btn.addEventListener('click',()=>{v[f.id]=v[f.id]?'':new Date().toLocaleDateString(undefined,{month:'long',day:'numeric',year:'numeric'});upd();changed();});
+  upd();
+  return h('div',{class:'field'},btn);
+}
+
+/* cycle tracker */
+const PH=[['bleeding','Bleeding days'],['before','Week before my period'],['other','Other days'],['none','No cycle right now']];
+const MD=[[1,'Very low','#3B3A8F'],[2,'Low','#7A77D6'],[3,'Okay','#BDB8E6'],[4,'Good','#F3C14F'],[5,'Great','#F2874B']];
+function fCycle(f,v,changed){
+  const root=h('div',{class:'field'});
+  let sel=fmt(new Date());
+  let draft;
+  const avg=a=>a.reduce((x,y)=>x+y,0)/a.length;
+  function draw(){
+    draft=Object.assign({mood:0,phase:'',note:''},S.cyc[sel]||{});
+    root.replaceChildren();
+    const dateIn=h('input',{type:'date',value:sel,max:fmt(new Date()),'aria-label':'Date'});
+    dateIn.addEventListener('change',()=>{if(dateIn.value){sel=dateIn.value;draw();}});
+    root.append(h('label',{class:'lbl'},'Date'),dateIn);
+    const moodBtns=MD.map(([n,l,c])=>h('button',{class:'mood',style:'--mc:'+c,'aria-pressed':draft.mood===n,onclick:()=>{draft.mood=n;moodBtns.forEach((b,i)=>b.setAttribute('aria-pressed',String(draft.mood===MD[i][0])));}},h('i'),l));
+    root.append(h('span',{class:'lbl',style:'margin-top:16px'},'How was my mood?'),h('div',{class:'moodrow'},moodBtns));
+    const phBtns=PH.map(([k,l])=>h('button',{class:'chip','aria-pressed':draft.phase===k,onclick:()=>{draft.phase=draft.phase===k?'':k;phBtns.forEach((b,i)=>b.setAttribute('aria-pressed',String(draft.phase===PH[i][0])));}},l));
+    root.append(h('span',{class:'lbl',style:'margin-top:16px'},'Where am I in my cycle?'),h('div',{class:'chips'},phBtns));
+    const ta=h('textarea',{rows:'2',placeholder:'Symptoms, sleep, anything that stood out'});
+    ta.value=draft.note;ta.addEventListener('input',()=>{draft.note=ta.value;});
+    root.append(h('span',{class:'lbl',style:'margin-top:16px'},'Notes'),ta);
+    const msg=h('span',{class:'hint',style:'margin:0;align-self:center'});
+    const acts=h('div',{class:'row',style:'margin-top:12px'},
+      h('button',{class:'btn pc',onclick:()=>{
+        if(!draft.mood){msg.textContent='Pick a mood first.';return;}
+        S.cyc[sel]={mood:draft.mood,phase:draft.phase,note:draft.note};save();changed();draw();
+      }},S.cyc[sel]?'Update entry':'Save entry'),
+      S.cyc[sel]&&h('button',{class:'btn ghost',onclick:()=>{delete S.cyc[sel];save();changed();draw();}},'Remove entry'),msg);
+    root.append(acts);
+    // grid
+    const t=new Date(),cells=[];
+    for(let i=90;i>=0;i--){
+      const d=new Date(t.getFullYear(),t.getMonth(),t.getDate()-i),k=fmt(d),e=S.cyc[k];
+      cells.push(h('button',{class:'cell'+(k===sel?' sel':''),style:(e&&e.mood)?'background:'+MD[e.mood-1][2]:'','aria-label':k+((e&&e.mood)?', mood '+MD[e.mood-1][1]:', no entry'),onclick:()=>{sel=k;draw();}}));
+    }
+    root.append(h('span',{class:'lbl',style:'margin-top:22px'},'The last 13 weeks'),h('div',{class:'grid'},cells),
+      h('div',{class:'legend'},MD.map(([n,l,c])=>h('span',null,h('i',{style:'background:'+c}),l))));
+    // summary
+    const ent=Object.values(S.cyc).filter(e=>e.mood);
+    if(ent.length){
+      const by={};ent.forEach(e=>{if(e.phase)(by[e.phase]=by[e.phase]||[]).push(e.mood);});
+      const rows=PH.filter(p=>by[p[0]]).map(p=>h('p',{style:'margin:4px 0'},p[1]+': average mood '+avg(by[p[0]]).toFixed(1)+' of 5 ('+by[p[0]].length+' '+(by[p[0]].length===1?'entry':'entries')+')'));
+      const dip=by.before&&by.other&&by.before.length>=3&&by.other.length>=3&&avg(by.before)<=avg(by.other)-1;
+      root.append(h('div',{class:'sumbox',style:'margin-top:18px'},h('h3',null,ent.length+' '+(ent.length===1?'entry':'entries')+' so far'),rows,
+        dip&&h('p',{style:'margin:10px 0 0'},'Your mood tends to dip in the week before your period. That is worth showing to a doctor. Tracking across at least two cycles helps with assessment. A pattern is a clue, not a diagnosis.')));
+    }
+  }
+  draw();
+  return root;
+}
+
+/* minimum viable day */
+const PRESETS=[
+ ['Body',['Sit up or get out of bed','Drink a glass of water','Eat something','Wash my face or brush my teeth','Take medication I’ve been prescribed','Step outside or open a window']],
+ ['People',['Send one message to someone','Ask for one specific thing']],
+ ['Home and work',['Do one small task','Let one thing go today']]
+];
+function fMvd(f,v,changed){
+  v.picked=v.picked||[];v.custom=v.custom||[];
+  const root=h('div',{class:'field'});
+  function draw(focus){
+    const td=fmt(new Date());
+    if(!S.mvdToday||S.mvdToday.date!==td) S.mvdToday={date:td,done:{}};
+    root.replaceChildren();
+    root.append(h('h3',{class:'fh',style:'margin-top:0;border:0;padding:0'},'Build my minimum day'),h('p',{class:'hint'},'Choose only what you could do on your worst day.'));
+    PRESETS.forEach(([g,opts])=>{
+      root.append(h('span',{class:'lbl',style:'margin-top:12px'},g),h('div',{class:'chips'},opts.map(o=>h('button',{class:'chip','aria-pressed':v.picked.includes(o),onclick:()=>{const i=v.picked.indexOf(o);if(i>-1) v.picked.splice(i,1);else v.picked.push(o);changed();draw(false);}},o))));
+    });
+    root.append(h('span',{class:'lbl',style:'margin-top:14px'},'My own'),
+      h('div',{class:'tags'},v.custom.map((t,i)=>h('span',{class:'tag'},t,h('button',{class:'x','aria-label':'Remove '+t,onclick:()=>{v.custom.splice(i,1);changed();draw(true);}},'×')))));
+    const inp=h('input',{type:'text',placeholder:'Add your own',maxlength:'100','aria-label':'Add your own item'});
+    const add=()=>{const t=inp.value.trim();if(!t) return;v.custom.push(t);changed();draw(true);};
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();add();}});
+    root.append(h('div',{class:'addrow'},inp,h('button',{class:'btn small pc',onclick:add},'Add')));
+    const items=v.picked.concat(v.custom);
+    root.append(h('h3',{class:'fh'},'Today'));
+    if(!items.length){root.append(h('p',{class:'hint'},'Pick a few things above and they’ll show up here as today’s checklist.'));}
+    else{
+      const done=items.filter(i=>S.mvdToday.done[i]).length;
+      const cnt=h('p',{class:'hint'});
+      const upd=()=>{const d=items.filter(i=>S.mvdToday.done[i]).length;cnt.textContent=d+' of '+items.length+(d?'. That counts. A minimum day is a floor, not a target.':'.');};
+      const list=h('div',{class:'checks'},items.map(it=>{
+        const b=h('button',{class:'check',role:'checkbox','aria-checked':!!S.mvdToday.done[it]},h('span',{class:'box'}),h('span',null,it));
+        b.addEventListener('click',()=>{S.mvdToday.done[it]=!S.mvdToday.done[it];b.setAttribute('aria-checked',String(!!S.mvdToday.done[it]));upd();save();});
+        return b;
+      }));
+      root.append(list,cnt);upd();
+    }
+    if(focus) inp.focus();
+  }
+  draw(false);
+  return root;
+}
+
+/* three-sentence conversation */
+function fThree(f,v,changed){
+  ['who','a','b','c'].forEach(k=>{if(typeof v[k]!=='string') v[k]='';});
+  const prev=h('div',{class:'preview'});
+  const build=()=>{
+    const intro=v.who==='A doctor or therapist'?'I’d like to talk about how I’ve been feeling.':(v.who?'I need to tell you something that’s hard to say.':'');
+    const t=[intro,v.a.trim(),v.b.trim(),v.c.trim()].filter(Boolean).join(' ');
+    prev.textContent=t||'Your three sentences will appear here.';
+    prev.classList.toggle('empty',!t);
+    return t;
+  };
+  const mk=(k,label,ph)=>{const ta=h('textarea',{rows:'2',placeholder:ph});ta.value=v[k];ta.addEventListener('input',()=>{v[k]=ta.value;build();changed();});return {ta,el:h('label',{class:'field',style:'margin:14px 0'},h('span',{class:'lbl'},label),ta)};};
+  const A=mk('a','1. What is happening','I haven’t felt like myself for a few weeks.');
+  const B=mk('b','2. How it is affecting me','It’s getting harder to keep up, and I’ve been pulling away.');
+  const C=mk('c','3. What I need','I need you to listen, and to help me book an appointment.');
+  const who=fPick({id:'who',multi:false,label:'Who am I talking to?',options:['A partner','A friend','A family member','A doctor or therapist']},v,()=>{build();changed();});
+  const copyBtn=h('button',{class:'btn pc',onclick:async()=>{const ok=await copyText(build());copyBtn.textContent=ok?'Copied':'Copy failed';setTimeout(()=>{copyBtn.textContent='Copy';},1600);}},'Copy');
+  const ex=h('button',{class:'btn ghost',onclick:()=>{
+    v.a='I haven’t felt like myself for a few weeks. I’m exhausted and nothing feels enjoyable.';
+    v.b='It’s getting harder to keep up at work, and I’ve been pulling away from people.';
+    v.c='I need you to listen without trying to fix it, and to help me book an appointment.';
+    A.ta.value=v.a;B.ta.value=v.b;C.ta.value=v.c;build();changed();
+  }},'Fill in an example');
+  const root=h('div',null,h('p',{class:'note'},'Short is easier to say and easier to hear. Write it, read it out loud once, then say it to someone.'),who,A.el,B.el,C.el,
+    h('span',{class:'lbl'},'What I’ll say'),prev,h('div',{class:'row',style:'margin-top:12px'},copyBtn,ex));
+  build();
+  return root;
+}
+
+const R={
+  h:f=>h('h3',{class:'fh'},f.text),
+  note:f=>h('p',{class:'note'},f.text),
+  alert:f=>h('div',{class:'alertbox'},h('p',null,f.text)),
+  text:fText,list:fList,pick:fPick,scale:fScale,pairs:fPairs,stamp:fStamp,cycle:fCycle,mvd:fMvd,three:fThree
+};
+
+/* ---------- views ---------- */
+function toolStarted(id){
+  if(id==='cycle') return Object.keys(S.cyc).length>0;
+  return hasVal(S.tools[id]);
+}
+function toolView(id){
+  const T=TOOLS.find(x=>x.id===id);const ch=CH.find(c=>c.n===T.ch);
+  const v=S.tools[id]=S.tools[id]||{};
+  const box=h('article',{class:'tool part-'+ch.p});
+  const sum=h('div',{class:'summary','aria-live':'polite'});
+  const refresh=()=>{const n=T.summary?T.summary(v,T):null;if(n) sum.replaceChildren(n);else sum.replaceChildren();};
+  const changed=()=>{save();refresh();};
+  box.append(h('button',{class:'back',onclick:()=>go('tools')},'‹ All tools'),
+    h('p',{class:'crumb'},'Chapter '+ch.n+': '+ch.title),h('h1',null,T.title),h('p',{class:'page-sub'},T.blurb));
+  T.fields.forEach(f=>box.append(R[f.t](f,v,changed,T)));
+  box.append(sum);refresh();
+  box.append(h('p',{class:'tfoot'},'This is a reflection tool, not a diagnosis. If you need support right now, ',h('button',{onclick:()=>go('help')},'open Help'),'. ',
+    h('button',{onclick:()=>go('chapters',null,ch.n)},'Go to Chapter '+ch.n),'.'));
+  return box;
+}
+function toolsIndex(){
+  const w=h('div');
+  w.append(h('h1',{class:'page-h'},'Tools and worksheets'),h('p',{class:'page-sub'},'Each one belongs to a chapter. Use them in any order. Your entries are saved for you.'));
+  PARTS.forEach(p=>{
+    const ts=TOOLS.filter(t=>CH.find(c=>c.n===t.ch).p===p.n).sort((a,b)=>a.ch-b.ch);
+    if(!ts.length) return;
+    w.append(h('div',{class:'part-head part-'+p.n},h('h2',null,'Part '+p.rom+': '+p.title)));
+    ts.forEach(t=>w.append(h('button',{class:'toolcard part-'+p.n,onclick:()=>go('tools',t.id)},
+      h('h3',null,t.title,toolStarted(t.id)&&h('span',{class:'badge'},'Started')),
+      h('p',{class:'meta'},'Chapter '+t.ch+(t.ws?', Worksheet '+t.ws:'')),
+      h('p',{style:'margin:0'},t.blurb))));
+  });
+  return w;
+}
+function chapterCard(c,open){
+  const card=h('section',{class:'chap part-'+c.p+(open?' open':''),id:'ch'+c.n});
+  const cnt=h('span',{class:'cnt'}),barI=h('i'),num=h('span',{class:'num'},String(c.n));
+  const head=h('button',{class:'chap-head','aria-expanded':!!open},num,h('span',{class:'ttl-wrap'},h('span',{class:'ttl'},c.title),h('span',{class:'bar'},barI)),cnt);
+  const body=h('div',{class:'chap-body'});body.hidden=!open;
+  head.addEventListener('click',()=>{const o=body.hidden;body.hidden=!o;head.setAttribute('aria-expanded',String(o));});
+  const upd=()=>{const d=chDone(c);cnt.textContent=d+'/'+c.s.length;barI.style.width=(d/c.s.length*100)+'%';num.textContent=d===c.s.length?'✓':String(c.n);};
+  body.append(h('p',{class:'purpose'},c.purpose));
+  if(c.idea) body.append(h('div',{class:'callout'},h('strong',null,c.ideaLabel||'Central idea'),h('p',null,c.idea)));
+  if(c.crisis) body.append(h('div',{class:'alertbox'},h('p',null,h('strong',null,'If you are in immediate danger, call your local emergency number now.')),h('button',{class:'btn alert small',onclick:()=>go('help')},'Open help now')));
+  const btns=[];
+  const list=h('div',{class:'checks',role:'group','aria-label':'Sections in '+c.title});
+  c.s.forEach((s,i)=>{
+    const key=c.n+'-'+i;
+    const b=h('button',{class:'check',role:'checkbox','aria-checked':!!S.read[key]},h('span',{class:'box'}),h('span',{class:'lbl2'},s));
+    b.addEventListener('click',()=>{if(S.read[key]) delete S.read[key];else S.read[key]=true;b.setAttribute('aria-checked',String(!!S.read[key]));upd();updateRibbons();save();});
+    btns.push({b,key});list.append(b);
+  });
+  body.append(h('p',{class:'hint',style:'margin-top:10px'},'Tick each section as you finish it.'),list);
+  const all=h('button',{class:'btn ghost small'},'Mark all as read');
+  all.addEventListener('click',()=>{
+    const full=chDone(c)===c.s.length;
+    btns.forEach(({b,key})=>{if(full) delete S.read[key];else S.read[key]=true;b.setAttribute('aria-checked',String(!full));});
+    all.textContent=full?'Mark all as read':'Clear all';upd();updateRibbons();save();
+  });
+  const acts=h('div',{class:'row',style:'margin-top:14px'},all);
+  if(c.tool){const T=TOOLS.find(t=>t.id===c.tool);acts.append(h('button',{class:'btn pc small',onclick:()=>go('tools',c.tool)},'Try: '+T.title));}
+  body.append(acts);
+  card.append(head,body);upd();
+  if(chDone(c)===c.s.length) all.textContent='Clear all';
+  return card;
+}
+function chaptersView(){
+  const w=h('div');
+  w.append(h('h1',{class:'page-h'},'Chapters'),
+    h('div',{class:'prog-row'},h('span',{class:'txt js-overall'}),h('div',{class:'meter',style:'width:90px'},h('i',{class:'js-overall-bar'}))),
+    h('p',{class:'page-sub'},'Twenty chapters in six parts. Open a chapter, tick sections as you read, and try its exercise.'));
+  PARTS.forEach(p=>{
+    w.append(h('div',{class:'part-head part-'+p.n},h('h2',null,'Part '+p.rom+': '+p.title),h('p',null,p.blurb)));
+    CH.filter(c=>c.p===p.n).forEach(c=>w.append(chapterCard(c,view.chapter===c.n)));
+  });
+  return w;
+}
+function homeView(){
+  const w=h('div');
+  const first=CH.find(c=>chProg(c)<1);
+  const started=totalProg()>0;
+  const bands=PARTS.map(p=>h('button',{class:'band part-'+p.n,'data-part':p.n,'aria-label':'Part '+p.rom+': '+p.title,onclick:()=>go('chapters',null,CH.find(c=>c.p===p.n).n)},h('span',{class:'fill'}),h('span',{class:'lab'},p.rom)));
+  w.append(h('section',{class:'hero'},
+    h('p',{class:'sub'},'A guide to depression in adult women'),
+    h('h1',null,'When Women Go Quiet'),
+    h('p',{class:'lead'},'Understanding depression, breaking the silence, and finding a way forward.'),
+    h('div',{class:'ribbon big'},bands),
+    h('div',{class:'prog-row'},h('span',{class:'txt js-overall'}),h('div',{class:'meter',style:'width:90px'},h('i',{class:'js-overall-bar'}))),
+    h('div',{class:'row'},
+      h('button',{class:'btn primary',onclick:()=>go('chapters',null,first?first.n:1)},started&&first?'Continue with Chapter '+first.n:'Start reading'),
+      h('button',{class:'btn ghost',onclick:()=>go('tools')},'Open the tools'))));
+
+  w.append(h('section',{class:'card'},
+    h('h2',null,'Introduction: The Woman Behind the Smile'),
+    h('p',null,'A woman can look like she is managing everything while privately struggling. She may keep working, caring for children, answering messages, showing up for people, or looking socially active, while inside she feels exhausted, hopeless, numb, guilty, anxious, or unable to enjoy anything.'),
+    h('p',null,'This guide doesn’t tell you that you’re too sensitive, and it doesn’t claim that every hard feeling is depression. It asks something else:'),
+    h('p',{class:'big-q'},'What happens when functioning becomes a way of hiding suffering?'),
+    h('p',{class:'note',style:'margin:0'},'There is no single “female experience.” You may be single, married, divorced, widowed, child-free, a mother, pregnant, postpartum, menopausal, disabled, working, unemployed, financially independent or dependent, or several of these at once.')));
+
+  const reply=h('div',{class:'reply','aria-live':'polite'});
+  const mb=MOODS.map((m,i)=>h('button',{class:'chip','aria-pressed':'false',onclick:()=>{
+    mb.forEach((b,j)=>b.setAttribute('aria-pressed',String(i===j)));
+    reply.replaceChildren(h('div',{class:m.crisis?'alertbox':'callout',style:'margin:0'},h('p',null,m.msg),h('button',{class:m.crisis?'btn alert small':'btn primary small',onclick:m.a[1]},m.a[0])));
+  }},m.l));
+  w.append(h('section',{class:'card'},h('h2',null,'How are you arriving today?'),h('p',{class:'hint'},'Tap the closest one. Nothing is saved.'),h('div',{class:'moods'},mb),reply));
+
+  const panel=h('div',{class:'callout',style:'margin:0'});
+  const fb=FLOW.map((f,i)=>h('button',{class:'chip','aria-pressed':'false',onclick:()=>{
+    fb.forEach((b,j)=>b.setAttribute('aria-pressed',String(i===j)));
+    panel.replaceChildren(h('strong',null,f.k),h('p',null,f.txt),h('div',{class:'row'},f.ch.map(n=>h('button',{class:'btn ghost small',onclick:()=>go('chapters',null,n)},'Chapter '+n))));
+  }},h('b',null,String(i+1)),f.k));
+  const wrap=h('section',{class:'card'},h('h2',null,'How the book works'),h('p',{class:'hint'},'Each step builds on the one before. Tap a step to see where it lives in the book.'),h('div',{class:'flow'},fb),panel);
+  fb[0].click();
+  w.append(wrap);
+
+  w.append(h('section',{class:'card'},h('h2',null,'How to use this guide'),
+    h('ul',{class:'plain'},h('li',null,'Read in any order. Start where it hurts or where you’re curious.'),h('li',null,'Tick sections as you go and watch color return along the top.'),h('li',null,'Try a tool when a chapter speaks to you. You don’t have to do them all.'),h('li',null,'Take a break whenever you need one.')),
+    h('div',{class:'callout'},h('strong',null,'Reader’s note'),h('p',null,'This guide is for education and reflection. It is not medical advice, a diagnosis, or a substitute for care from a qualified professional. If you’re worried about your mood, or things are getting worse, talk to a doctor or therapist. If you are in immediate danger, call your local emergency number.'))));
+  return w;
+}
+function planView(){
+  const w=h('div');
+  const total=30;
+  const cnt=h('span',{class:'txt'});
+  const bar=h('i');
+  const upd=()=>{const d=Object.keys(S.days).filter(k=>S.days[k]).length;cnt.textContent=d+' of '+total+' days marked';bar.style.width=(d/total*100)+'%';};
+  w.append(h('h1',{class:'page-h'},'30-day recovery companion'),
+    h('p',{class:'page-sub'},'Four weeks: notice, stabilize, reconnect, rebuild. Mark a day when you’ve done what you could. Missed a day? Start again without shame.'),
+    h('div',{class:'prog-row'},cnt,h('div',{class:'meter',style:'width:90px'},bar)));
+  WEEKS.forEach(wk=>{
+    const dots=[];
+    for(let d=wk.days[0];d<=wk.days[1];d++){
+      const b=h('button',{class:'day','aria-pressed':!!S.days[d],'aria-label':'Day '+d},String(d));
+      b.addEventListener('click',()=>{if(S.days[d]) delete S.days[d];else S.days[d]=true;b.setAttribute('aria-pressed',String(!!S.days[d]));upd();save();});
+      dots.push(b);
+    }
+    const tasks=wk.tasks.map((t,i)=>{
+      const key='w'+wk.n+'-'+i;
+      const b=h('button',{class:'check',role:'checkbox','aria-checked':!!S.wk[key]},h('span',{class:'box'}),h('span',null,t));
+      b.addEventListener('click',()=>{if(S.wk[key]) delete S.wk[key];else S.wk[key]=true;b.setAttribute('aria-checked',String(!!S.wk[key]));save();});
+      return b;
+    });
+    w.append(h('section',{class:'card week part-'+wk.part},
+      h('h2',null,'Week '+wk.n+': '+wk.title),h('p',{class:'note'},wk.line),
+      h('div',{class:'days',role:'group','aria-label':'Days in week '+wk.n},dots),
+      h('h3',null,'This week’s focus'),h('div',{class:'checks'},tasks),
+      h('div',{class:'row',style:'margin-top:14px'},wk.tools.map(id=>h('button',{class:'btn pc small',onclick:()=>go('tools',id)},TOOLS.find(t=>t.id===id).title)))));
+  });
+  upd();
+  return w;
+}
+function helpView(){
+  const w=h('div');
+  w.append(h('h1',{class:'page-h'},'Help now'),h('p',{class:'page-sub'},'Calm, direct steps for a hard moment.'));
+  w.append(h('section',{class:'alertbox'},
+    h('h2',{style:'font-size:1.3rem;margin-bottom:8px'},'If you are in danger right now'),
+    h('p',null,'If you might act on thoughts of suicide, or you can’t keep yourself safe, call your local emergency number now.'),
+    h('p',null,'In the US, you can call or text 988 (Suicide & Crisis Lifeline) at any hour.'),
+    h('div',{class:'row'},h('a',{class:'btn alert',href:'tel:988'},'Call 988'),h('a',{class:'btn ghost',href:'sms:988'},'Text 988'),h('a',{class:'btn ghost',href:'https://findahelpline.com',target:'_blank',rel:'noopener'},'Helplines worldwide'))));
+  w.append(h('section',{class:'card'},h('h2',null,'In the moment'),
+    h('ol',{class:'steps'},
+      h('li',null,h('strong',null,'Don’t stay alone.'),' Go to, or call, someone who can be with you.'),
+      h('li',null,h('strong',null,'Tell someone directly.'),' You could say: “I’m having thoughts of suicide and I need you with me right now.”'),
+      h('li',null,h('strong',null,'Put distance between you and anything you could use to hurt yourself.'),' Ask someone to hold it or remove it.'),
+      h('li',null,h('strong',null,'Avoid alcohol and recreational drugs.'),' They can make a crisis harder to get through.'),
+      h('li',null,h('strong',null,'Go somewhere safe,'),' near other people, or to an emergency department.'),
+      h('li',null,h('strong',null,'Get emergency medical help'),' if you have already hurt yourself or taken something.')),
+    h('p',{class:'note',style:'margin:8px 0 0'},'Your current pain is not your entire future.')));
+  w.append(h('section',{class:'card'},h('h2',null,'Pregnant or a new mother'),
+    h('p',null,'Postpartum Support International HelpLine (US): 1-800-944-4773, call or text.'),
+    h('p',null,'National Maternal Mental Health Hotline (US): 1-833-852-6262.'),
+    h('p',{class:'note',style:'margin:0'},'Thoughts of harming yourself or your baby, hearing or seeing things others don’t, or feeling confused or cut off from reality need urgent help. Call your local emergency number.')));
+  w.append(h('section',{class:'card'},h('h2',null,'Signs it’s time to talk to someone'),
+    h('ul',{class:'plain'},
+      h('li',null,'Low mood or loss of interest most days for two weeks or more'),
+      h('li',null,'Changes in sleep, appetite, energy, or concentration'),
+      h('li',null,'Feeling worthless, guilty, or hopeless'),
+      h('li',null,'Pulling away from people'),
+      h('li',null,'Using more alcohol or other substances to cope'),
+      h('li',null,'Struggling to function at work or at home')),
+    h('p',{style:'margin:8px 0 0'},'Any thought of suicide, even a passing one, deserves attention.'),
+    h('div',{class:'row',style:'margin-top:12px'},h('button',{class:'btn primary small',onclick:()=>go('tools','provider')},'Prepare for an appointment'),h('button',{class:'btn ghost small',onclick:()=>go('tools','safety')},'Build a safety plan'))));
+  w.append(h('section',{class:'card'},h('h2',null,'If someone else is struggling'),
+    h('ul',{class:'plain'},h('li',null,'Ask directly. Asking about suicide doesn’t put the idea in her head.'),h('li',null,'Listen without arguing or trying to fix it.'),h('li',null,'Stay with her, and help her reach crisis or emergency support.'),h('li',null,'Look after yourself afterward too.'))));
+  const clear=h('div');
+  const showClear=()=>{
+    clear.replaceChildren(h('button',{class:'btn ghost small',onclick:()=>{
+      clear.replaceChildren(h('p',{class:'hint'},'This erases every entry, checkbox, and tracker in this guide. It can’t be undone.'),
+        h('div',{class:'row'},h('button',{class:'btn alert small',onclick:()=>{S=fresh();save();go('guide');}},'Yes, erase everything'),h('button',{class:'btn ghost small',onclick:showClear},'Cancel')));
+    }},'Erase my entries'));
+  };
+  showClear();
+  w.append(h('section',{class:'card'},h('h2',null,'Your entries'),h('p',{class:'note'},'What you write here is saved for you only, when your device allows it. Nothing is sent to anyone.'),clear));
+  return w;
+}
+
+/* ---------- shell ---------- */
+const ICONS={
+  guide:'<path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/>',
+  chapters:'<path d="M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h10"/>',
+  tools:'<path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/>',
+  plan:'<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>',
+  help:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.5"/><path d="M6.3 6.3l3.2 3.2M14.5 14.5l3.2 3.2M17.7 6.3l-3.2 3.2M9.5 14.5l-3.2 3.2"/>'
+};
+const TABS=[['guide','Guide'],['chapters','Chapters'],['tools','Tools'],['plan','30 days'],['help','Help']];
+function buildChrome(){
+  const tabs=$('#tabs');
+  TABS.forEach(([k,l])=>{
+    const b=h('button',{class:'tab','data-tab':k,onclick:()=>go(k)});
+    b.innerHTML='<span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">'+ICONS[k]+'</svg></span><span>'+l+'</span>';
+    tabs.append(b);
+  });
+  const slim=$('#slimRibbon');
+  PARTS.forEach(p=>slim.append(h('span',{class:'band part-'+p.n,'data-part':p.n},h('span',{class:'fill'}))));
+  $('#helpTop').addEventListener('click',()=>go('help'));
+}
+function render(){
+  const m=$('#main');
+  m.replaceChildren();
+  let node;
+  if(view.tab==='guide') node=homeView();
+  else if(view.tab==='chapters') node=chaptersView();
+  else if(view.tab==='tools') node=view.tool?toolView(view.tool):toolsIndex();
+  else if(view.tab==='plan') node=planView();
+  else node=helpView();
+  m.append(node);
+  document.querySelectorAll('.tab').forEach(b=>{if(b.dataset.tab===view.tab) b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
+  updateRibbons();
+}
+(async function init(){
+  await load();
+  buildChrome();
+  render();
+})();
+})();
+</script>
+</body>
+</html>
